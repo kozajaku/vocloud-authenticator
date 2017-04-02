@@ -8,7 +8,7 @@ Installation
 
 You can install the authenticator by executing the following command::
 
-    pip3 install -e git+https://github.com/kozajaku/vocloud-authenticator.git#egg=vocloud-authenticator
+    pip3 install git+https://github.com/kozajaku/vocloud-authenticator.git#egg=vocloud-authenticator
 
 Required configuration
 ----------------------
