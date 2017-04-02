@@ -17,7 +17,7 @@ class VocloudAuthenticator(Authenticator):
 
     token_endpoint_uri = Unicode(
         config=True,
-        default='/api/jupyter/token',
+        default_value='/api/jupyter/token',
         help="""
         URI to the vocloud token endpoint relative to vocloud URL context
         """
@@ -25,7 +25,7 @@ class VocloudAuthenticator(Authenticator):
 
     service_name = Unicode(
         config=True,
-        default='jupyterhub',
+        default_value='jupyterhub',
         help="""
         Expected service name. This name should come from the vocloud token endpoint
         and must be validated against.
