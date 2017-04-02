@@ -51,6 +51,8 @@ class VocloudAuthenticator(Authenticator):
         request = HTTPRequest(url, method='POST', headers=headers, body=data)
         try:
             response = yield client.fetch(request)
+            if response.body is None:
+                return None
             res = json.loads(response.body.decode('utf-8'))
             if username != res.get('username'):
                 return None
@@ -59,4 +61,6 @@ class VocloudAuthenticator(Authenticator):
                 return None
             return username  # authentication successful
         except HTTPError:
+            return None
+        except json.JSONDecodeError:
             return None
