@@ -35,7 +35,7 @@ class VocloudAuthenticator(Authenticator):
     @gen.coroutine
     def authenticate(self, handler, data):
         username = data.get('username')
-        password = data('password')
+        password = data.get('password')
         if username is None or password is None:
             return None
         if password.strip() == '':
