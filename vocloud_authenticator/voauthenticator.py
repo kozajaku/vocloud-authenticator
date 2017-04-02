@@ -37,8 +37,10 @@ class VocloudAuthenticator(Authenticator):
         username = data.get('username')
         password = data.get('password')
         if username is None or password is None:
+            self.log.debug('missing username or password parameter')
             return None
         if password.strip() == '':
+            self.log.debug('password parameter is empty')
             return None
         while self.vocloud_url.endswith('/'):
             self.vocloud_url = self.vocloud_url[0: -1]
@@ -52,15 +54,22 @@ class VocloudAuthenticator(Authenticator):
         try:
             response = yield client.fetch(request)
             if response.body is None:
+                self.log.debug('no response body from token endpoint')
                 return None
             res = json.loads(response.body.decode('utf-8'))
             if username != res.get('username'):
+                self.log.debug('username does not match. Expected {}, got {}'.format(username, res.get('username')))
                 return None
             # check service name
             if self.service_name != res.get('serviceName'):
+                self.log.debug('service name does not match. Expected {}, got {}'
+                               .format(self.service_name, res.get('serviceName')))
                 return None
+            self.log.debug('authentication successful')
             return username  # authentication successful
-        except HTTPError:
+        except HTTPError as e:
+            self.log.debug('got HTTPError: {}'.format(str(e)))
             return None
         except json.JSONDecodeError:
+            self.log.debug('unable to parse JSON: {}'.format(response.body.decode('utf-8')))
             return None
