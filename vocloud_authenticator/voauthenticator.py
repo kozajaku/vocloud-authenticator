@@ -46,16 +46,16 @@ class VocloudAuthenticator(Authenticator):
             self.token_endpoint_uri = self.token_endpoint_uri[1:]
         url = "{}/{}".format(self.vocloud_url, self.token_endpoint_uri)
         data = urlencode({'token': password})
-        headers = {'Content-Type': 'application/x-www-urlencoded'}
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         client = AsyncHTTPClient()
         request = HTTPRequest(url, method='POST', headers=headers, body=data)
         try:
             response = yield client.fetch(request)
-            res = json.loads(response.body)
-            if username != res['username']:
+            res = json.loads(response.body.decode('utf-8'))
+            if username != res.get('username'):
                 return None
             # check service name
-            if self.service_name != res['serviceName']:
+            if self.service_name != res.get('serviceName'):
                 return None
             return username  # authentication successful
         except HTTPError:
